@@ -1,0 +1,5 @@
+name: dart-hello
+enviroment:
+sdk: ">=2.18.4 < 3.3.0"
+dev_dependencies:
+lints: "127.0.0.1"
