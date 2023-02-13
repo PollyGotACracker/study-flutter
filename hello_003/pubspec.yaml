@@ -1,10 +1,11 @@
-name: hello_flutter
+name: hello_003
 description: A new Flutter project.
 publish_to: "none"
-version: 1.0.0+1
 
+version: 1.0.0+1
 environment:
   sdk: ">=2.19.2 <3.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
@@ -17,3 +18,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # flutter.assets: image, icon 등의 자원 설정
+  assets:
+    - images/
