@@ -21,11 +21,13 @@ class App extends StatelessWidget {
           child: Scaffold(
               appBar: AppBar(
                 title: const Text("나의 자랑"),
-                bottom: const TabBar(tabs: [
-                  Tab(text: "Home"),
-                  Tab(text: "프로필"),
-                  Tab(text: "기타"),
-                ]),
+                bottom: const TabBar(
+                  tabs: [
+                    Tab(text: "Home"),
+                    Tab(text: "프로필"),
+                    Tab(text: "기타"),
+                  ],
+                ),
               ),
               body: const TabBarView(
                 children: [
