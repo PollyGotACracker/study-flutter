@@ -1,5 +1,7 @@
 # Flutter
 
+- flutter create project_name
+
 ## Settings.json 설정
 
 - ctrl + shift + p => Open User Settings(JSON)
