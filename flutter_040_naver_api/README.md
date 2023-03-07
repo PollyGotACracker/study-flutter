@@ -49,3 +49,31 @@ buildTypes {
     }
 }
 ```
+
+## 영화 리스트 검색 후 naver 영화 자세히 보기로 jump
+
+- 외부 URL 을 내장 브라우저로 열기
+- `flutter pub add url_launcher` 설치
+- `AndroidManifest.xml` 파일의 `<application` 속성 위에 다음 항목 추가
+
+```xml
+<queries>
+    <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="https" />
+    </intent>
+</queries>
+```
+
+## Android 기기에서 외부 브라우저를 열거나 WebView 위젯으로 열 때 오류 해결
+
+- `웹페이지를 사용할 수 없음`, `ERR_CLEARTEXT_NOT_PERMITTED` 오류
+- `android:usesCleartextTraffic="true"`
+
+```xml
+<application
+    android:label="flutter_naver"
+    android:name="${applicationName}"
+    android:icon="@mipmap/ic_launcher"
+    android:usesCleartextTraffic="true">
+```
