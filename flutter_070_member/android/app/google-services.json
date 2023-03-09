@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "251096057640-78uru53uv1emccq0567bsejlf8bmp9n5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.polly.firebase",
-            "certificate_hash": "89bab86176154117bc5a2a46a058f863207234f1"
-          }
-        },
-        {
           "client_id": "251096057640-836dcu0d7c7mougbeui988cmpcphhr31.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -51,14 +43,6 @@
         }
       },
       "oauth_client": [
-        {
-          "client_id": "251096057640-vlou87mu12csi4ge4rm3so104klmglvs.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.polly.member",
-            "certificate_hash": "89bab86176154117bc5a2a46a058f863207234f1"
-          }
-        },
         {
           "client_id": "251096057640-836dcu0d7c7mougbeui988cmpcphhr31.apps.googleusercontent.com",
           "client_type": 3

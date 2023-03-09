@@ -12,3 +12,37 @@
 ## pubspec.yaml 버전 변경
 
 - `sdk: ">=2.19.0 <4.0.0"`
+
+## google firebase 프로젝트 구성
+
+- firebase 에서 프로젝트 생성
+- 안드로이드 App 을 추가하고
+- SHA 지문 등록하기
+
+## SHA 지문 등록하기
+
+- Android Studio 가 설치되어 있어야 한다.
+- `C:\Program Files\Java\jdk-15.0.2\bin` 폴더로 이동
+- bash shell 실행하기
+- 아래 명령을 실행하여 SHA 지문 확인하기
+- cf) `~/` 는 리눅스 명령어에서 사용자 폴더까지의 경로를 의미
+
+```bash
+./keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore
+```
+
+- 비밀번호 : `android` 를 입력
+- bash 창에 출력된 내용 중에서 SHA1 , SHA256 의 코드값을 복사
+- firebase 프로젝트의 SHA 지문에 추가
+- /android/app 에 google-services.json 파일 추가
+
+## firebase 연동 실행
+
+- firebase SDK 안내서에 따라 Android 아래의 build.gradle 파일에 설정하기
+- dependencies 설정하기
+
+```bash
+flutter pub add firebase_core
+flutter pub add firebase_auth
+flutter pub add firebase_database
+```
