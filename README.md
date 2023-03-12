@@ -4,6 +4,12 @@
 - https://docs.flutter.dev/reference/widgets
 - https://docs.flutter.dev/development/ui/widgets
 
+## Marketplace
+
+- `Dart`
+- `Flutter`
+- `Error Lens`
+
 ## Settings.json 설정
 
 - ctrl + shift + p => Open User Settings(JSON)
@@ -29,7 +35,7 @@
 }
 ```
 
-- `"source.fixAll.eslint": true` : `ctrl + s`(저장) 로 문법 오류 수정
+- cf) `"source.fixAll.eslint": true` : `ctrl + s`(저장) 로 문법 오류 수정
 
 ## Widget Inspector
 
