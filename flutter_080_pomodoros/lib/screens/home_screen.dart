@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
+  // createState():
+  // State 클래스의 _HomeScreenState 생성자 호출, State 반환
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -55,6 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void onRestartPressed() {
+    totalSeconds = minutes;
+    timer.cancel();
+    setState(() {
+      isRunning = false;
+    });
+  }
+
   // var 는 기본적인 변수 선언 키워드
   // totalSeconds 를 인수로 받아서 시간 형식으로 formatting 하는 함수
   String format(int seconds) {
@@ -65,8 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return duration.toString().split(".").first.substring(2, 7);
   }
 
+  // build() 는 Widget 을 반환
   @override
   Widget build(BuildContext context) {
+    // Scaffold(): Material 디자인의 시각적 레이아웃 구조 구현
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
@@ -88,13 +99,26 @@ class _HomeScreenState extends State<HomeScreen> {
           Flexible(
             flex: 3,
             child: Center(
-              child: IconButton(
-                color: Theme.of(context).cardColor,
-                iconSize: 120,
-                onPressed: isRunning ? onPausePressed : onStartPressed,
-                icon: Icon(isRunning
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    color: Theme.of(context).cardColor,
+                    iconSize: 120,
+                    onPressed: isRunning ? onPausePressed : onStartPressed,
+                    icon: Icon(isRunning
+                        ? Icons.pause_circle_outline
+                        : Icons.play_circle_outline),
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  IconButton(
+                      color: Theme.of(context).cardColor,
+                      onPressed: onRestartPressed,
+                      iconSize: 50,
+                      icon: const Icon(Icons.restart_alt_outlined))
+                ],
               ),
             ),
           ),
