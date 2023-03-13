@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,12 +15,13 @@ class _HomeScreenState extends State<HomeScreen> {
   // cf) const 와 final 의 차이
   // const 는 compile 시 이미 상수로 지정되어 있는 값
   // final 은 함수가 실행된고 반환하는 값을 상수로 고정
-  static const minutes = 1500;
-  int totalSeconds = minutes; // 1500: 25 * 60 = 1500s
+  static const minutes = 1500; // 1500: 25 * 60 = 1500s
+  int totalSeconds = minutes;
   bool isRunning = false;
   int totalCount = 0;
   // late: 선언만 하고 나중에 초기화
   late Timer timer;
+  late Duration? duration;
 
   // setState((){}): statefulWidget 에 화면 변경을 알림
   // setState((){...}) 내부에 코드를 작성하거나, 코드 가장 아래에 setState((){}) 를 작성
@@ -57,11 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onRestartPressed() {
-    totalSeconds = minutes;
-    timer.cancel();
-    setState(() {
-      isRunning = false;
-    });
+    if (!isRunning) {
+      setState(() {
+        totalSeconds = duration!.inSeconds.toInt();
+      });
+    }
   }
 
   // var 는 기본적인 변수 선언 키워드
@@ -71,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // 0:25:00.000000 을 온점을 기준으로 분리한 후, 첫번째 값만 가져옴(0:25:00)
     // 시간을 없애기 위해 인덱스를 이용하여 문자열을 추출(25:00)
     // print(duration.toString().split(".").first.substring(2, 7));
-    return duration.toString().split(".").first.substring(2, 7);
+    return duration.toString().split(".").first;
   }
 
   // build() 는 Widget 을 반환
@@ -117,7 +119,36 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Theme.of(context).cardColor,
                       onPressed: onRestartPressed,
                       iconSize: 50,
-                      icon: const Icon(Icons.restart_alt_outlined))
+                      icon: const Icon(Icons.restart_alt_outlined)),
+                  TextButton(
+                    onPressed: () async {
+                      duration = await showDurationPicker(
+                        context: context,
+                        // initialTime: duration ?? const Duration(minutes: 25),
+                        initialTime: const Duration(minutes: 25),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      );
+                      setState(() {
+                        totalSeconds = duration!.inSeconds.toInt();
+                      });
+                    },
+                    style: ButtonStyle(
+                      textStyle: MaterialStateProperty.all(const TextStyle(
+                        fontSize: 14,
+                      )),
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).cardColor),
+                    ),
+                    child: Text(
+                      "Duration",
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.displayLarge!.color,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
