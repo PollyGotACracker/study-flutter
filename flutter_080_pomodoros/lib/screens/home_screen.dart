@@ -16,12 +16,12 @@ class _HomeScreenState extends State<HomeScreen> {
   // const 는 compile 시 이미 상수로 지정되어 있는 값
   // final 은 함수가 실행된고 반환하는 값을 상수로 고정
   static const minutes = 1500; // 1500: 25 * 60 = 1500s
-  int totalSeconds = minutes;
+  late int totalSeconds;
+  late Duration? duration;
   bool isRunning = false;
   int totalCount = 0;
   // late: 선언만 하고 나중에 초기화
   late Timer timer;
-  late Duration? duration;
 
   // setState((){}): statefulWidget 에 화면 변경을 알림
   // setState((){...}) 내부에 코드를 작성하거나, 코드 가장 아래에 setState((){}) 를 작성
@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         totalCount = totalCount + 1;
         isRunning = false;
-        totalSeconds = minutes;
+        totalSeconds = duration!.inSeconds.toInt();
       });
       timer.cancel();
     } else {
@@ -59,11 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onRestartPressed() {
-    if (!isRunning) {
-      setState(() {
-        totalSeconds = duration!.inSeconds.toInt();
-      });
-    }
+    // if (!isRunning) {
+    //   setState(() {
+    //     totalSeconds = duration!.inSeconds.toInt();
+    //   });
+    // }
   }
 
   // var 는 기본적인 변수 선언 키워드
@@ -115,39 +115,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: 50,
                   ),
-                  IconButton(
-                      color: Theme.of(context).cardColor,
-                      onPressed: onRestartPressed,
-                      iconSize: 50,
-                      icon: const Icon(Icons.restart_alt_outlined)),
-                  TextButton(
-                    onPressed: () async {
-                      duration = await showDurationPicker(
-                        context: context,
-                        // initialTime: duration ?? const Duration(minutes: 25),
-                        initialTime: const Duration(minutes: 25),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      );
-                      setState(() {
-                        totalSeconds = duration!.inSeconds.toInt();
-                      });
-                    },
-                    style: ButtonStyle(
-                      textStyle: MaterialStateProperty.all(const TextStyle(
-                        fontSize: 14,
-                      )),
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).cardColor),
-                    ),
-                    child: Text(
-                      "Duration",
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.displayLarge!.color,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                          onPressed: () async {
+                            duration = await showDurationPicker(
+                              context: context,
+                              initialTime:
+                                  duration ?? const Duration(minutes: 25),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            );
+                            setState(() {
+                              totalSeconds = duration!.inSeconds.toInt();
+                            });
+                          },
+                          style: ButtonStyle(
+                            textStyle:
+                                MaterialStateProperty.all(const TextStyle(
+                              fontSize: 14,
+                            )),
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).cardColor),
+                          ),
+                          color: Theme.of(context).cardColor,
+                          iconSize: 40,
+                          icon: const Icon(Icons.access_time_filled_outlined)),
+                      const SizedBox(
+                        width: 50,
                       ),
-                    ),
+                      IconButton(
+                          color: Theme.of(context).cardColor,
+                          onPressed: onRestartPressed,
+                          iconSize: 50,
+                          icon: const Icon(Icons.restart_alt_outlined)),
+                    ],
                   ),
                 ],
               ),
