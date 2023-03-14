@@ -14,10 +14,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // cf) const 와 final 의 차이
   // const 는 compile 시 이미 상수로 지정되어 있는 값
-  // final 은 함수가 실행된고 반환하는 값을 상수로 고정
-  static const minutes = 1500; // 1500: 25 * 60 = 1500s
-  late int totalSeconds;
-  late Duration? duration;
+  // final 은 함수가 실행되고 반환하는 값을 상수로 고정
+  // 1500: 25 * 60 = 1500s
+  static const initSeconds = 1500;
+  Duration duration = const Duration(minutes: 25);
+  int totalSeconds = initSeconds;
   bool isRunning = false;
   int totalCount = 0;
   // late: 선언만 하고 나중에 초기화
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         totalCount = totalCount + 1;
         isRunning = false;
-        totalSeconds = duration!.inSeconds.toInt();
+        totalSeconds = duration.inSeconds.toInt();
       });
       timer.cancel();
     } else {
@@ -59,11 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onRestartPressed() {
-    // if (!isRunning) {
-    //   setState(() {
-    //     totalSeconds = duration!.inSeconds.toInt();
-    //   });
-    // }
+    if (!isRunning) {
+      setState(() {
+        totalSeconds = duration.inSeconds.toInt();
+      });
+    }
   }
 
   // var 는 기본적인 변수 선언 키워드
@@ -119,19 +120,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
+                          // underscore(_) 가 있는 private 변수는 widget 내부에서 선언 불가
+                          // 변수에 값을 할당할 때 값에 쓰이는 !는 null safety(절대 null 값이 아님을 명시)
                           onPressed: () async {
-                            duration = await showDurationPicker(
+                            duration = (await showDurationPicker(
                               context: context,
-                              initialTime:
-                                  duration ?? const Duration(minutes: 25),
+                              initialTime: duration,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                            );
-                            setState(() {
-                              totalSeconds = duration!.inSeconds.toInt();
-                            });
+                            ))!;
+                            totalSeconds = duration.inSeconds.toInt();
+                            setState(() {});
                           },
                           style: ButtonStyle(
                             textStyle:

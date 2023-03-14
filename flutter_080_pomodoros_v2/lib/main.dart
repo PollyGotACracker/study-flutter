@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_080_pomodoros_v2/pages/dash_board_page.dart';
 import 'package:flutter_080_pomodoros_v2/pages/main_page.dart';
 
 void main() {
@@ -23,10 +24,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _pageIndex = 0;
   static const setCounter = 5;
   int _counter = setCounter;
   bool _timeRun = false;
   late Timer _timer;
+  final PageController _pageController = PageController(initialPage: 0);
 
   void _onPressed() {
     setState(() {
@@ -65,28 +68,44 @@ class _HomePageState extends State<HomePage> {
         child: Scaffold(
           // background image 를 넣을 때는 color 를 transparent 로 설정
           backgroundColor: Colors.transparent,
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [MainPage(counter: _counter)],
-            ),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.miniCenterFloat,
-          floatingActionButton: SizedBox(
-            width: 100,
-            height: 100,
-            child: FloatingActionButton(
-              backgroundColor: Colors.white38,
-              elevation: 5,
-              onPressed: _onPressed,
-              tooltip: 'Start',
-              child: Icon(
-                (_timeRun ? Icons.pause : Icons.play_arrow_rounded),
-                size: 50,
-                color: Colors.black,
+          body: PageView(
+            controller: _pageController,
+            scrollDirection: Axis.horizontal,
+            // page 가 전환되었을 때 bottomNav 에 표시하기 위해서
+            onPageChanged: (pageNum) => {
+              setState(() => {_pageIndex = pageNum})
+            },
+            children: [
+              MainPage(
+                counter: _counter,
+                onPressed: _onPressed,
+                timeRun: _timeRun,
               ),
-            ),
+              const DashBoardPage(),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _pageIndex,
+            onTap: (value) => {
+              setState(() => {
+                    _pageIndex = value,
+                    _pageController.animateToPage(
+                      // 표시할 페이지의 번호
+                      value,
+                      // 페이지 전환시간
+                      duration: const Duration(
+                        milliseconds: 500,
+                      ),
+                      // 애니메이션 종류
+                      curve: Curves.ease,
+                    )
+                  })
+            },
+            items: const [
+              BottomNavigationBarItem(label: "Home", icon: Icon(Icons.home)),
+              BottomNavigationBarItem(
+                  label: "Dashboard", icon: Icon(Icons.dashboard)),
+            ],
           ),
         ),
       ),
