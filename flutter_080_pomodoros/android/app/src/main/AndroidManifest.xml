@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_080_pomodoros">
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <application
         android:label="flutter_080_pomodoros"
         android:name="${applicationName}"

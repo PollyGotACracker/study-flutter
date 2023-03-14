@@ -72,9 +72,7 @@ class _HomePageState extends State<HomePage> {
             controller: _pageController,
             scrollDirection: Axis.horizontal,
             // page 가 전환되었을 때 bottomNav 에 표시하기 위해서
-            onPageChanged: (pageNum) => {
-              setState(() => {_pageIndex = pageNum})
-            },
+            onPageChanged: (pageNum) => {setState(() => _pageIndex = pageNum)},
             children: [
               MainPage(
                 counter: _counter,

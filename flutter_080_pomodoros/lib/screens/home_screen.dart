@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,20 +21,33 @@ class _HomeScreenState extends State<HomeScreen> {
   Duration duration = const Duration(minutes: 25);
   int totalSeconds = initSeconds;
   bool isRunning = false;
+  bool isStopped = false;
   int totalCount = 0;
   // late: 선언만 하고 나중에 초기화
   late Timer timer;
+
+  void startVibrate() async {
+    bool? chkCustomVibSupport = await Vibration.hasCustomVibrationsSupport();
+    if (chkCustomVibSupport!) {
+      Vibration.vibrate(pattern: [500, 1000, 500, 2000], repeat: 1);
+    } else {
+      Vibration.vibrate();
+      await Future.delayed(const Duration(milliseconds: 500));
+      Vibration.vibrate();
+    }
+  }
 
   // setState((){}): statefulWidget 에 화면 변경을 알림
   // setState((){...}) 내부에 코드를 작성하거나, 코드 가장 아래에 setState((){}) 를 작성
   void onTick(Timer timer) {
     if (totalSeconds == 0) {
       setState(() {
-        totalCount = totalCount + 1;
         isRunning = false;
-        totalSeconds = duration.inSeconds.toInt();
+        isStopped = true;
       });
-      timer.cancel();
+      if (isStopped) {
+        startVibrate();
+      }
     } else {
       setState(() {
         totalSeconds = totalSeconds - 1;
@@ -56,6 +70,16 @@ class _HomeScreenState extends State<HomeScreen> {
     timer.cancel();
     setState(() {
       isRunning = false;
+    });
+  }
+
+  void onStopPressed() {
+    setState(() {
+      Vibration.cancel();
+      timer.cancel();
+      totalCount = totalCount + 1;
+      totalSeconds = duration.inSeconds.toInt();
+      isStopped = false;
     });
   }
 
@@ -108,13 +132,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   IconButton(
                     color: Theme.of(context).cardColor,
                     iconSize: 120,
-                    onPressed: isRunning ? onPausePressed : onStartPressed,
+                    onPressed: isRunning
+                        ? onPausePressed
+                        : isStopped
+                            ? onStopPressed
+                            : onStartPressed,
                     icon: Icon(isRunning
                         ? Icons.pause_circle_outline
-                        : Icons.play_circle_outline),
+                        : isStopped
+                            ? Icons.stop_circle_outlined
+                            : Icons.play_circle_outline),
                   ),
                   const SizedBox(
-                    height: 50,
+                    height: 60,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
