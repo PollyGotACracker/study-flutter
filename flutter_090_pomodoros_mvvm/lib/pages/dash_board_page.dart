@@ -10,11 +10,11 @@ class DashBoardPage extends StatefulWidget {
 class _DashBoardPageState extends State<DashBoardPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         body: Center(
             child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: const [
         Text(
           "DashBoard",
           style: TextStyle(fontSize: 50),
