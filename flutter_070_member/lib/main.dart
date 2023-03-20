@@ -22,7 +22,10 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: MultiProvider(providers: [
+        ChangeNotifierProvider(create: (_) => GoogleLoginViewModel()),
+        ChangeNotifierProvider(create: (_) => EmailLoginViewModel()),
+      ], child: const HomePage()),
     );
   }
 }
@@ -31,60 +34,21 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-// google 로그인을 수행하기 위한 초기화 함수
-GoogleSignIn _googleSignIn = GoogleSignIn(
-  scopes: [
-    'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
-  ],
-);
-
-Future<void> _handleSignIn() async {
-  try {
-    await _googleSignIn.signIn();
-  } catch (e) {
-    print(e);
-  }
-}
-
-class _HomePageState extends State<HomePage> {
-  GoogleSignInAccount? _currentUser;
-  late User? _authUser;
-
-  @override
-  void initState() {
-    super.initState();
-    _authUser = FirebaseAuth.instance.currentUser;
-    /**
-     * google login 이 되면 google 로부터 이벤트가 전달된다.
-     * 이벤트를 기다리다가 user 정보가 오면 _currentUser 에
-     * google login 정보를 저장
-     */
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      setState(() {
-        _currentUser = account;
-        print("Sign In");
-      });
-    }); // end signIn
-    _googleSignIn.signInSilently();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Member")),
       body: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
-        child: _buildBody(),
+        child: _buildBody(context),
       ),
     );
   } // end build
 
-  Widget _buildBody() {
-    final GoogleSignInAccount? user = _currentUser;
+  Widget _buildBody(BuildContext context) {
+    var googleViewModel = context.watch<GoogleLoginViewModel>();
+    var emailViewModel = context.watch<EmailLoginViewModel>();
+
+    final GoogleSignInAccount? user = googleViewModel.currentUser;
     if (user != null) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -181,35 +145,6 @@ class _HomePageState extends State<HomePage> {
           const Flexible(fit: FlexFit.tight, child: SizedBox(height: 1000))
         ],
       );
-    }
-  }
-
-  Future<void> loginSubmit({required email, required password}) async {
-    FocusScope.of(context).requestFocus(FocusNode());
-    try {
-      // firebase_auth 에서 제공하는 API 클래스
-      UserCredential resultAuth =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      _authUser = resultAuth.user;
-      setState(() {});
-    } on FirebaseException catch (e) {
-      String message = "";
-      if (e.code == "user-not-found") {
-        message = "사용자가 존재하지 않습니다.";
-      } else if (e.code == "wrong-password") {
-        message = "비밀번호가 맞지 않습니다.";
-      } else if (e.code == "invaild-email") {
-        message = "이메일을 확인하세요";
-      } else {
-        message = "${e.code} 알 수 없는 오류 발생";
-      }
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.deepOrange,
-      ));
     }
   }
 
