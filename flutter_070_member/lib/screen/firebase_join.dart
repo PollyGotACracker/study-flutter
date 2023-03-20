@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../comps/input_box.dart';
+import 'package:flutter_member/comps/input_box.dart';
 
 class JoinPage extends StatefulWidget {
   const JoinPage({super.key});
@@ -27,16 +27,15 @@ class _JoinPageState extends State<JoinPage> {
         return value;
       });
       // print(result.user!.email);
-      // 이메일 인증
       FirebaseAuth.instance.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       String message = "";
       if (e.code == "weak-password") {
-        message = "비밀번호가 보안에 취약합니다.";
+        message = "비밀번호가 보안에 취약합니다";
       } else if (e.code == "email-already-in-use") {
-        message = "이미 가입된 비밀번호입니다.";
+        message = "이미 가입된 비밀번호 입니다";
       } else {
-        message = "알 수 없는 오류 발생";
+        message = "알수없는 오류 발생";
       }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -60,40 +59,44 @@ class _JoinPageState extends State<JoinPage> {
               const Padding(
                 padding: EdgeInsets.all(10),
                 child: Center(
-                  child: Text("회원가입",
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      )),
+                  child: Text(
+                    "회원가입",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
                 ),
               ),
               Card(
-                  child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          inputBox(
-                            onChanged: (value) {
-                              _userEmail = value;
-                              setState(() {});
-                            },
-                            labelText: "이메일",
-                            errorMsg: "이메일을 입력하세요",
-                            keyboardType: TextInputType.text,
-                          ),
-                          inputBox(
-                            onChanged: (value) {
-                              _password = value;
-                              setState(() {});
-                            },
-                            labelText: "비밀번호",
-                            errorMsg: "비밀번호를 입력하세요",
-                            obscureText: true,
-                            keyboardType: TextInputType.text,
-                          )
-                        ],
-                      ))),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      inputBox(
+                        onChanged: (value) {
+                          _userEmail = value;
+                          setState(() {});
+                        },
+                        labelText: "이메일",
+                        errorMsg: "이메일을 입력하세요",
+                        keyboardType: TextInputType.text,
+                      ),
+                      inputBox(
+                        onChanged: (value) {
+                          _password = value;
+                          setState(() {});
+                        },
+                        labelText: "비밀번호",
+                        errorMsg: "비밀번호를 입력하세요",
+                        obscureText: true,
+                        keyboardType: TextInputType.text,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               ElevatedButton(
                 onPressed: () async {
                   await _joinSubmit(context);
